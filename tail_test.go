@@ -13,7 +13,7 @@ import (
 
 func Print_log(buffer io.Writer, logs chan Oplog) {
 	for log := range logs {
-		fmt.Fprintf(buffer, "%s|%s|%s\n", log.Ns, log.Op, log.O["_id"].(bson.ObjectId).Hex())
+		fmt.Fprintf(buffer, "%s|%s|%s\n", log.Namespace, log.Operation, log.Object["_id"].(bson.ObjectId).Hex())
 	}
 }
 func Test_Tail(t *testing.T) {

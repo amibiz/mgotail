@@ -22,7 +22,7 @@ func SendSFTPJobs(gmlogs chan Oplog) {
 	gm := Gearman{"https", gmHost, gmPort, gmUser, gmPw}
 
 	for logdoc := range gmlogs {
-		job_data := map[string]string{"system": logdoc.O["_id"].(bson.ObjectId).Hex()}
+		job_data := map[string]string{"system": logdoc.Object["_id"].(bson.ObjectId).Hex()}
 		id, err := gm.SendJob("sftp", job_data)
 		if err != nil {
 			log.Println("Error posting job:", err)
