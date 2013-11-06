@@ -2,16 +2,12 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
-	"time"
+	"log"
 	"os"
+	"time"
 )
-
-func Now() bson.MongoTimestamp {
-	return bson.MongoTimestamp(time.Now().Unix() << 32)
-}
 
 func SendSFTPJobs(gmlogs chan Oplog) {
 	// Post the SFTP jobs that come throught the channel
@@ -32,17 +28,22 @@ func SendSFTPJobs(gmlogs chan Oplog) {
 	}
 }
 
-func PostJobs(timeout time.Duration, finished chan bool) {
+func PostJobs(timeout time.Duration, finished chan bool) error {
 	// Tail the oplog for new SFTP systems and post the job when it comes through.
 	mongo_url := os.Getenv("MONGO_URL")
-	session,err := mgo.Dial(mongo_url)
+	session, err := mgo.Dial(mongo_url)
 
 	if err != nil {
 		log.Println("Error: Could not connect to db", mongo_url)
+		return err
 	}
 
 	ns := fmt.Sprintf("%s.systems", os.Getenv("MONGO_DB"))
-	q := bson.M{"ts": bson.M{"$gt": Now()}, "o.type": "sftp", "ns": ns, "op": "i"}
+	last := LastTime(session)
+	if err != nil {
+		return err
+	}
+	q := bson.M{"ts": bson.M{"$gt": last}, "o.type": "sftp", "ns": ns, "op": "i"}
 	query := OplogQuery{session, q, timeout}
 
 	done := make(chan bool)
@@ -53,5 +54,6 @@ func PostJobs(timeout time.Duration, finished chan bool) {
 
 	<-done
 	close(logs)
-	finished <-true
+	finished <- true
+	return nil
 }
