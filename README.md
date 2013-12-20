@@ -1,6 +1,6 @@
-# mongo-tail
+# mgotail
 
-mongo-tail is a simple library to tail mongodb [oplogs](http://docs.mongodb.org/manual/core/replica-set-oplog/) in Go.
+mgotail is a simple library to tail mongodb [oplogs](http://docs.mongodb.org/manual/core/replica-set-oplog/) in Go.
 
 ## Documentation
 
