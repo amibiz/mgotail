@@ -61,36 +61,3 @@ func Test_Tail(t *testing.T) {
 	db.DropDatabase()
 	fmt.Println("..done.\n")
 }
-
-func Test_PostJobs(t *testing.T) {
-	// Test that PostJobs posts SFTP jobs on tail. Gearman not working yet.
-	fmt.Println("Testing `PostJobs`...")
-
-	finished := make(chan bool)
-	go PostJobs(time.Second*3, finished)
-
-	session, err := mgo.Dial(os.Getenv("MONGO_URL"))
-	if err != nil {
-		fmt.Fprintf(os.Stdout, "Cannot connect to Mongodb: %s\n %s", os.Getenv("MONGO_URL"), err)
-		t.Fail()
-	}
-
-	session.EnsureSafe(&mgo.Safe{WMode: "majority"})
-	db := session.DB(os.Getenv("MONGO_DB"))
-	coll := db.C("systems")
-
-	for i := 0; i < 5; i++ {
-		id := bson.NewObjectId()
-		err = coll.Insert(bson.M{"type": "sftp", "_id": id})
-		if err != nil {
-			fmt.Println(err)
-			t.Fail()
-		}
-		fmt.Printf("%s|i|%s.systems\n", id.Hex(), os.Getenv("MONGO_DB"))
-	}
-
-	<-finished
-
-	db.DropDatabase()
-	fmt.Println("..done.\n")
-}
