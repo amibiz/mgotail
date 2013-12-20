@@ -4,4 +4,4 @@ mgotail is a simple library to tail mongodb [oplogs](http://docs.mongodb.org/man
 
 ## Documentation
 
-[![GoDoc](https://godoc.org/github.com/Clever/mongo-tail?status.png)](https://godoc.org/github.com/Clever/mongo-tail).
+[![GoDoc](https://godoc.org/github.com/Clever/mgotail?status.png)](https://godoc.org/github.com/Clever/mgotail).
