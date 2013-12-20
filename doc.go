@@ -1,4 +1,4 @@
-// mgotail is a simple package to tail mongodb [oplogs](http://docs.mongodb.org/manual/core/replica-set-oplog/) in Go.
+// mgotail is a simple package to tail mongodb oplogs: http://docs.mongodb.org/manual/core/replica-set-oplog/.
 //
 //
 // Usage
