@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func Print_log(buffer io.Writer, logs chan Oplog) {
+func printlog(buffer io.Writer, logs chan Oplog) {
 	// Print logs from an oplog channel to a buffer
 	for log := range logs {
 		id := log.Object["_id"].(bson.ObjectId).Hex()
@@ -38,7 +38,7 @@ func Test_Tail(t *testing.T) {
 
 	q := OplogQuery{session, bson.M{"ts": bson.M{"$gt": last}, "ns": "TailTest.test"}, time.Second * 3}
 	go q.Tail(logs, done)
-	go Print_log(&results, logs)
+	go printlog(&results, logs)
 
 	db := session.DB("TailTest")
 	coll := db.C("test")

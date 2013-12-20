@@ -6,15 +6,17 @@ import (
 	"time"
 )
 
+// OplogQuery describes a query you'd like to perform on the oplog.
 type OplogQuery struct {
 	Session *mgo.Session
 	Query   bson.M
 	Timeout time.Duration
 }
 
+// Oplog is a deserialization of the fields present in an oplog entry.
 type Oplog struct {
 	Timestamp    bson.MongoTimestamp "ts"
-	HistoryId    int64               "h"
+	HistoryID    int64               "h"
 	MongoVersion int                 "v"
 	Operation    string              "op"
 	Namespace    string              "ns"
@@ -22,15 +24,16 @@ type Oplog struct {
 	QueryObject  bson.M              "o2"
 }
 
+// Helper function to get the timestamp of the last operation in the oplog.
+// The return value can be used for construting queries on the "ts" oplog field.
 func LastTime(session *mgo.Session) bson.MongoTimestamp {
-	// Get the Mongo Timestamp of the last member in the oplog
 	var member Oplog
 	session.DB("local").C("oplog.rs").Find(nil).Sort("-$natural").One(&member)
 	return member.Timestamp
 }
 
+// Begin tailing for oplog entries. Publishes Oplog objects to a channel.
 func (query *OplogQuery) Tail(logs chan Oplog, done chan bool) {
-	// Add a tail to the oplog.rs collection and send any new logs to the Oplog channel.
 	db := query.Session.DB("local")
 	collection := db.C("oplog.rs")
 	iter := collection.Find(query.Query).LogReplay().Tail(query.Timeout)
