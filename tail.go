@@ -24,7 +24,7 @@ type Oplog struct {
 	QueryObject  bson.M              "o2"
 }
 
-// Helper function to get the timestamp of the last operation in the oplog.
+// LastTime gets the timestamp of the last operation in the oplog.
 // The return value can be used for construting queries on the "ts" oplog field.
 func LastTime(session *mgo.Session) bson.MongoTimestamp {
 	var member Oplog
@@ -32,7 +32,8 @@ func LastTime(session *mgo.Session) bson.MongoTimestamp {
 	return member.Timestamp
 }
 
-// Begin tailing for oplog entries. Publishes Oplog objects to a channel.
+// Tail starts the tailing of the oplog.
+// Entries matching the configured query are published to channel passed to the function.
 func (query *OplogQuery) Tail(logs chan Oplog, done chan bool) {
 	db := query.Session.DB("local")
 	collection := db.C("oplog.rs")
