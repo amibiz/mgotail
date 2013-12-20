@@ -1,4 +1,4 @@
-package main
+package mgotail
 
 import (
 	"labix.org/v2/mgo"
