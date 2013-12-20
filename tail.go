@@ -33,7 +33,7 @@ func (query *OplogQuery) Tail(logs chan Oplog, done chan bool) {
 	// Add a tail to the oplog.rs collection and send any new logs to the Oplog channel.
 	db := query.Session.DB("local")
 	collection := db.C("oplog.rs")
-	iter := collection.Find(query.Query).Tail(query.Timeout)
+	iter := collection.Find(query.Query).LogReplay().Tail(query.Timeout)
 	var log Oplog
 	for iter.Next(&log) {
 		logs <- log
