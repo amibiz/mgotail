@@ -22,7 +22,7 @@ func Test_Tail(t *testing.T) {
 	// Test the `Tail` on the Oplog
 	fmt.Println("Testing `Tail`...")
 
-	session, err := mgo.Dial(os.Getenv("MONGO_URL"))
+	session, err := mgo.Dial(os.Getenv("MONGODB_PORT_27017_TCP_ADDR"))
 	if err != nil {
 		fmt.Printf("Cannot connect to Mongodb: %s.\n %s", os.Getenv("MONGO_URL"), err)
 		t.Fail()
