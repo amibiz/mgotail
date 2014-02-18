@@ -1,0 +1,7 @@
+image: go1.2
+script:
+  - echo $ENV
+  - go get -d -t
+  - go test
+services:
+  - mongodb
