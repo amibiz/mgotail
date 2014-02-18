@@ -1,6 +1,6 @@
 image: go1.2
 script:
-  - echo $ENV
+  - env
   - go get -d -t
   - go test
 services:
