@@ -1,7 +1,9 @@
 image: go1.2
+
 script:
   - env
   - go get -d -t
   - go test
+
 services:
   - mongodb
