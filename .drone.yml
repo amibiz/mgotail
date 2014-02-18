@@ -3,5 +3,5 @@ script:
   - env
   - go get -d -t
   - go test
-services:
-  - mongodb
+# services:
+#   - mongodb
