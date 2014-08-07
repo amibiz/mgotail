@@ -6,7 +6,7 @@ script:
   - go test
 
 services:
-  - mongodb
+  - schimmy/mongodb:2.6
 notify:
   email:
     recipients:
