@@ -2,11 +2,13 @@ image: go1.2
 
 script:
   - env
+  - sudo apt-get install mongodb-clients
+  - mongo --eval 'rs.initiate()'
   - go get -d -t
   - go test
 
 services:
-  - schimmy/mongodb:2.6
+  - schimmy/mongodb-tailtest:2.6
 notify:
   email:
     recipients:
