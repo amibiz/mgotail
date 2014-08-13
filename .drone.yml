@@ -2,12 +2,20 @@ image: go1.2
 
 script:
   - env
+  - sudo apt-get install mongodb-clients
+  - mongo --eval 'rs.initiate()'
   - go get -d -t
   - go test
 
 services:
-  - mongodb
+  - schimmy/mongodb-tailtest:2.6
 notify:
   email:
     recipients:
       - drone@clever.com
+  hipchat:
+    room: Clever-Dev-CI
+    token: {{hipchatToken}}
+    on_started: true
+    on_success: true
+    on_failure: true
