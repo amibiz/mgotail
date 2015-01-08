@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"labix.org/v2/mgo"
-	"labix.org/v2/mgo/bson"
-	"os"
 	"testing"
 	"time"
+
+	"github.com/facebookgo/mgotest"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 func printlog(buffer io.Writer, logs chan Oplog) {
@@ -18,15 +19,10 @@ func printlog(buffer io.Writer, logs chan Oplog) {
 		fmt.Fprintf(buffer, "%s|%s|%s\n", log.Namespace, log.Operation, id)
 	}
 }
-func Test_Tail(t *testing.T) {
-	// Test the `Tail` on the Oplog
-	fmt.Println("Testing `Tail`...")
 
-	session, err := mgo.Dial(os.Getenv("MONGODB_PORT_27017_TCP_ADDR"))
-	if err != nil {
-		fmt.Printf("Cannot connect to Mongodb: %s.\n %s", os.Getenv("MONGO_URL"), err)
-		t.Fail()
-	}
+func Test_Tail(t *testing.T) {
+	replset := mgotest.NewReplicaSet(2, t)
+	session := replset.Session()
 	session.EnsureSafe(&mgo.Safe{WMode: "majority"})
 
 	var results bytes.Buffer
@@ -44,7 +40,9 @@ func Test_Tail(t *testing.T) {
 	coll := db.C("test")
 	for i := 0; i < 5; i++ {
 		id := bson.NewObjectId()
-		err = coll.Insert(bson.M{"name": "test_0", "_id": id})
+		if err := coll.Insert(bson.M{"name": "test_0", "_id": id}); err != nil {
+			t.Fatal(err)
+		}
 		fmt.Fprintf(&buffer, "TailTest.test|i|%s\n", id.Hex())
 	}
 
@@ -59,5 +57,4 @@ func Test_Tail(t *testing.T) {
 	}
 
 	db.DropDatabase()
-	fmt.Println("..done.\n")
 }
