@@ -1,14 +1,6 @@
-image: go1.2
-
+image: bradrydzewski/go:1.3
 script:
-  - env
-  - sudo apt-get install mongodb-clients
-  - mongo --eval 'rs.initiate()'
-  - go get -d -t
-  - go test
-
-services:
-  - schimmy/mongodb-tailtest:2.6
+  - ./test_drone.sh
 notify:
   email:
     recipients:

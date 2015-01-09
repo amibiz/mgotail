@@ -9,8 +9,8 @@
 //
 //         import (
 //         	"fmt"
-//         	"labix.org/v2/mgo"
-//         	"labix.org/v2/mgo/bson"
+//         	"gopkg.in/mgo.v2"
+//         	"gopkg.in/mgo.v2/bson"
 //         	"os"
 //         	"github.com/Clever/mgotail"
 //         )
@@ -24,7 +24,7 @@
 //         	q := mgotail.OplogQuery{
 //         		Session: session,
 //         		Query:   bson.M{"ts": bson.M{"$gt": mgotail.LastOplogTime(session)}},
-//         		Timeout: -1, // See http://godoc.org/labix.org/v2/mgo#Query.Tail
+//         		Timeout: -1, // See http://godoc.org/gopkg.in/mgo.v2#Query.Tail
 //         	}
 //
 //         	logs := make(chan Oplog)
