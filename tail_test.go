@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"sync"
 	"testing"
 	"time"
 
@@ -22,7 +23,9 @@ func printlog(buffer io.Writer, logs chan Oplog) {
 
 func Test_Tail(t *testing.T) {
 	replset := mgotest.NewReplicaSet(2, t)
+	defer replset.Stop()
 	session := replset.Session()
+	defer session.Close()
 	session.EnsureSafe(&mgo.Safe{WMode: "majority"})
 
 	var results bytes.Buffer
@@ -32,11 +35,17 @@ func Test_Tail(t *testing.T) {
 	done := make(chan bool)
 	last := LastTime(session)
 
-	q := OplogQuery{session, bson.M{"ts": bson.M{"$gt": last}, "ns": "TailTest.test"}, time.Second * 3}
+	q := OplogQuery{session, bson.M{"ts": bson.M{"$gt": last}, "ns": "TailTest.test"}, time.Second * 10}
 	go q.Tail(logs, done)
-	go printlog(&results, logs)
+	var printwg sync.WaitGroup
+	go func() {
+		printwg.Add(1)
+		defer printwg.Done()
+		printlog(&results, logs)
+	}()
 
 	db := session.DB("TailTest")
+	defer db.DropDatabase()
 	coll := db.C("test")
 	for i := 0; i < 5; i++ {
 		id := bson.NewObjectId()
@@ -48,6 +57,7 @@ func Test_Tail(t *testing.T) {
 
 	<-done
 	close(logs)
+	printwg.Wait()
 
 	resultsString := results.String()
 	bufferString := buffer.String()
@@ -55,6 +65,4 @@ func Test_Tail(t *testing.T) {
 		fmt.Printf("Got:\n %s\n\n Should have gotten: \n%s", resultsString, bufferString)
 		t.Fail()
 	}
-
-	db.DropDatabase()
 }
