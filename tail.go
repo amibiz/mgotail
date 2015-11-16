@@ -1,9 +1,10 @@
 package mgotail
 
 import (
+	"time"
+
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"time"
 )
 
 // OplogQuery describes a query you'd like to perform on the oplog.
@@ -15,13 +16,13 @@ type OplogQuery struct {
 
 // Oplog is a deserialization of the fields present in an oplog entry.
 type Oplog struct {
-	Timestamp    bson.MongoTimestamp "ts"
-	HistoryID    int64               "h"
-	MongoVersion int                 "v"
-	Operation    string              "op"
-	Namespace    string              "ns"
-	Object       bson.M              "o"
-	QueryObject  bson.M              "o2"
+	Timestamp    bson.MongoTimestamp `bson:"ts"`
+	HistoryID    int64               `bson:"h"`
+	MongoVersion int                 `bson:"v"`
+	Operation    string              `bson:"op"`
+	Namespace    string              `bson:"ns"`
+	Object       bson.M              `bson:"o"`
+	QueryObject  bson.M              `bson:"o2"`
 }
 
 // LastTime gets the timestamp of the last operation in the oplog.
