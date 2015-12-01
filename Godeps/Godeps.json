@@ -1,0 +1,34 @@
+{
+	"ImportPath": "github.com/Clever/mgotail",
+	"GoVersion": "go1.5.1",
+	"Packages": [
+		"github.com/Clever/mgotail"
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/facebookgo/freeport",
+			"Rev": "d4adf43b75b9357dc7775f033e807a3411591522"
+		},
+		{
+			"ImportPath": "github.com/facebookgo/mgotest",
+			"Rev": "34c1160fa1f7d3592acd56f8961e73a7c4efba38"
+		},
+		{
+			"ImportPath": "github.com/facebookgo/stack",
+			"Rev": "3df46e3d0ab4255cd8a0a6bb79561f33d9910c24"
+		},
+		{
+			"ImportPath": "github.com/facebookgo/testname",
+			"Rev": "5443337c3a12e7194a181eceb64fc4b14c964b9b"
+		},
+		{
+			"ImportPath": "github.com/facebookgo/waitout",
+			"Rev": "ad2714ff0cfc54a42d8e0f7a76047e14041c51ae"
+		},
+		{
+			"ImportPath": "gopkg.in/mgo.v2",
+			"Comment": "r2015.10.05-1-g4d04138",
+			"Rev": "4d04138ffef2791c479c0c8bbffc30b34081b8d9"
+		}
+	]
+}
