@@ -4,7 +4,7 @@ include golang.mk
 .PHONY: $(PKG) test
 SHELL := /bin/bash
 PKGS := github.com/Clever/mgotail
-$(eval $(call golang-version-check,1.5))
+$(eval $(call golang-version-check,1.6))
 
 export MONGO_URL ?= mongodb://localhost:27017/test
 
